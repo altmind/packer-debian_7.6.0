@@ -1,4 +1,7 @@
 {
+    "variables": {
+        "do_api_token": ""
+    },
     "builders": [
         {
             "boot_command": [
@@ -20,35 +23,46 @@
             ],
             "disk_size": 10140,
             "guest_os_type": "Debian_64",
-            "headless": true,
+            "headless": false,
             "http_directory": "http",
-            "iso_checksum": "8a3c2ad7fd7a9c4c7e9bcb5cae38c135",
+            "iso_checksum": "a91fba5001cf0fbccb44a7ae38c63b6e",
             "iso_checksum_type": "md5",
-            "iso_url": "http://cdimage.debian.org/debian-cd/7.6.0/amd64/iso-cd/debian-7.6.0-amd64-netinst.iso",
+            "iso_url": "http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso",
             "shutdown_command": "echo 'halt -p' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
             "ssh_password": "vagrant",
             "ssh_port": 22,
             "ssh_username": "vagrant",
-            "ssh_wait_timeout": "10000s",
+            "ssh_wait_timeout": "36000s",
             "type": "virtualbox-iso",
             "vboxmanage": [
                 [
                     "modifyvm",
                     "{{.Name}}",
                     "--memory",
-                    "512"
+                    "1024"
                 ],
                 [
                     "modifyvm",
                     "{{.Name}}",
                     "--cpus",
-                    "1"
+                    "2"
                 ]
             ]
+        },
+        {
+            "type": "digitalocean",
+            "api_token": "{{user `do_api_token`}}",
+            "region": "ams3",
+            "image": "debian-7-0-x64",
+            "private_networking": true,
+            "size": "1gb"
         }
     ],
     "post-processors": [
-        "vagrant"
+        {
+          "type": "vagrant",
+          "only": ["virtualbox-iso"]
+        }
     ],
     "provisioners": [
         {
@@ -57,10 +71,15 @@
                 "virtualbox-iso": {
                     "scripts": [
                         "scripts/base.sh",
-                        "scripts/system.sh",
                         "scripts/vagrant.sh",
                         "scripts/virtualbox.sh",
-                        "scripts/python.sh",
+                        "scripts/cleanup.sh"
+                    ]
+                },
+                "digitalocean": {
+                    "scripts": [
+                        "scripts/base.sh",
+                        "scripts/user.sh",
                         "scripts/cleanup.sh"
                     ]
                 }

@@ -2,7 +2,10 @@
 apt-get -y update
 apt-get -y install linux-headers-$(uname -r) build-essential
 apt-get -y install zlib1g-dev libssl-dev libreadline-gplv2-dev
-apt-get -y install curl unzip
+apt-get -y install curl unzip mc vim htop
+apt-get -y install nfs-common
+
+echo '' > /var/run/motd
 
 # Set up sudo
 echo 'vagrant ALL=NOPASSWD:ALL' > /etc/sudoers.d/vagrant
