@@ -1,7 +1,8 @@
 # Set up Vagrant.
 
 # Create the user vagrant with password vagrant
-useradd -G sudo -p $(perl -e'print crypt("vagrant", "vagrant")') -m -s /bin/bash -N vagrant
+useradd -G sudo -m -s /bin/bash -N vagrant
+echo vagrant:vagrant | chpasswd
 
 # Install vagrant keys
 mkdir -pm 700 /home/vagrant/.ssh
